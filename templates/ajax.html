@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+	<p> &nbsp; </p>
+	<p> &nbsp; </p>
+	<p> &nbsp; </p>
+
+	<h1 class="lead text-center"> Ajax Testing </h1>
+
+		<div class="panel panel-default col-sm-offset-4 col-sm-4">
+    		<div class="panel-body text-center">
+		        <div class="header">
+		        	<h3 class="text-muted">Managing JSON Requests</h3>
+		        </div>
+		        <hr/>
+		        <p> &nbsp; </p>
+			    <input class="text-center" type="text" size="5" name="a"> +
+			    <input class="text-center" type="text" size="5" name="b"> =
+			    <span id="result">?</span>
+			    <p> &nbsp; </p>
+			    <button class="btn btn-success" id="calculate">Calculate</button>
+			    <button class="btn btn-danger" id="reset">Reset</button>
+			</div>
+		</div>
+        <p> &nbsp; </p>
+        <p> &nbsp; </p>
+	    <p> &nbsp; </p>
+	    <div class="panel panel-default col-sm-offset-4 col-sm-4">
+    		<div class="panel-body text-center">
+		        <button class="btn btn-success" id="comments">Get Comments (getJSON)</button>
+		        <button class="btn btn-danger" id="comments-clear">Clear All</button>
+		        <div id="comment-res" style="margin:2em auto; padding:0; width:10em; height:20em; overflow:auto;">
+        	</div>
+        </div>
+        </div>
+      
+        <p> &nbsp; </p>
+	    <p> &nbsp; </p>
+	    <p> &nbsp; </p>
+	    <div class="panel panel-default col-sm-offset-4 col-sm-4">
+    		<div class="panel-body text-center">
+		        <button class="btn btn-success" id="comments-ajax">Get Comments Ajax</button>
+		        <div id="comment-ajax"></div>
+       		 </div>
+        </div>
+    	<p> &nbsp; </p>
+	    <p> &nbsp; </p>
+	    <p> &nbsp; </p>
+    	<div class="panel panel-default col-sm-offset-4 col-sm-4">
+    		<div class="panel-body text-center">
+		    	<h3 class="text-center">Infinite Scrolling using AJAX</h3>
+				<ul id="numbers" style="margin:2em auto; padding:0; width:10em; height:20em; overflow:auto; text-align:center; list-style-type:none;">
+					<li>1</li>
+					<li>2</li>
+					<li>3</li>
+					<li>4</li>
+					<li>5</li>
+					<li>6</li>
+					<li>7</li>
+					<li>8</li>
+					<li>9</li>
+					<li>10</li>
+					<li>11</li>
+					<li>12</li>
+					<li>13</li>
+					<li>14</li>
+					<li>15</li>
+					<li>16</li>
+					<li>17</li>
+					<li>18</li>
+					<li>19</li>
+					<li>20</li>
+				</ul>
+	      </div>
+		</div>
+		<p> &nbsp; </p>
+	    <p> &nbsp; </p>
+	    <p> &nbsp; </p>
+</div>
+
+{% endblock %}
+
+{% block head %}
+<script type=text/javascript src="../static/endlessScroll.js"></script>
+
+<script type=text/javascript>
+   var getComments = function() {
+        $.getJSON('/comments', function(data) {
+          console.log(data.res);
+        });
+        return data.res;
+      };
+</script>
+
+<script type=text/javascript>
+    $(function() {
+      $('#comments-ajax').bind('click', function() {
+      	$.ajax({
+				url: '/comments',
+				dataType: 'JSON',
+				success: function(data) {
+					console.log(data);
+					var parsed = $.parseJSON(data);
+					console.log(data);
+					//console.log(parsed.success);
+					//$('#comment-ajax').text(parsed);
+					},
+				error: function(error) {
+                console.log(error);
+            	}
+		});
+
+      });	
+    });
+  </script>
+
+<script type=text/javascript>
+    $(function() {
+      $('#comments').bind('click', function() {
+        $.getJSON('/comments', function(data) {
+          $("#comment-res").append('<div>' + data.res + '</div>');
+          console.log(data.res)
+        });
+        return false;
+      });
+    });
+
+	$(function() {
+      $('#comments-clear').bind('click', function() {
+          $("#comment-res").text('');
+      });
+    });
+
+  </script>
+
+<script type=text/javascript>
+    $(function() {
+      $('#calculate').bind('click', function() {
+        $.getJSON('/_add_numbers', {
+          a: $('input[name="a"]').val(),
+          b: $('input[name="b"]').val()
+        }, function(data) {
+          $("#result").text(data.result);
+        });
+        return false;
+      });
+    });
+    $(function() {
+      $('#reset').bind('click', function() {
+          $("#result").text('?');
+          $('input[name="a"]').val('');
+          $('input[name="b"]').val('');
+      });
+    });
+  </script>
+  // Script
+  <script type=text/javascript>
+	$(document).ready(function() {
+		var offset = $('#numbers li').length;
+
+		$('#numbers').endlessScroll({
+			fireOnce: false,
+			fireDelay: false,
+			loader: '',
+			insertAfter: '#numbers li:last',
+			content: function(i) {
+				return '<li>' + (i + offset) + '</li>';
+			}
+		});
+
+		var offset = $('#comment-res').length;
+
+		$('#comment-res').endlessScroll({
+			fireOnce: false,
+			fireDelay: false,
+			loader: '<button class="btn btn-md btn-link"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...</button>',
+			insertAfter: '#comment-res:last',
+			content: function(i) {
+				return getComments();
+			}
+		});
+	});
+
+	
+</script>
+ 
+{% endblock %}

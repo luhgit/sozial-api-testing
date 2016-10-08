@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container" style="width:550px">
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	  {% for id in TIDs %}
+		<div class="tweet" id="{{ id }}"></div>
+	  {% endfor %}
+	  </div>
+	</div>
+</div>
+
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+
+<div class="container" style="width:550px">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			{% for id in YIDs %}
+				<div class="ytube" id="{{ id }}"></div>
+			{% endfor %}
+			<div class="yt"></div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block head %}
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script sync src="https://platform.twitter.com/widgets.js"></script>
+ 
+
+<script type="text/javascript">
+  window.onload = (function(){
+	var tweets = jQuery(".tweet");  // Creates an array of all divs of the class tweet
+	jQuery(tweets).each( function( t, tweet ) { // For each div element, For each id in array: function(key, value)
+    var id = jQuery(this).attr('id');           // Fetches the ID of the div
+ 
+    twttr.widgets.createTweet(
+      id, tweet, 
+      {
+        conversation : 'none',    // or all
+        cards        : 'hidden',  // or visible 
+        linkColor    : '#cc0000', // default is blue
+        theme        : 'light'    // or dark
+      });
+    });
+	
+	var yids = jQuery(".ytube");
+	jQuery(yids).each( function( i, yid ) {
+		var id = jQuery(this).attr('id');
+		url = 'https://www.googleapis.com/youtube/v3/videos?id='+id+'&key=AIzaSyAgYwLqY13Gbo7eAsbEL4I8jDnucN1K-sA&part=snippet';
+		$.getJSON(url, id, function(data){
+				if (data.items.length == 1) {
+				$('<iframe width="487" height="315" src="https://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen></iframe>').appendTo('.yt');
+				}
+		});
+	});
+});
+</script>
+<style>
+<!-- To make tweet responsive -->  
+  .EmbeddedTweet-tweet {
+    width: 700px;
+    max-width: 960px;
+}
+</style>
+{% endblock %}

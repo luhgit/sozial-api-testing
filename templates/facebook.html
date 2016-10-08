@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+
+<p class="lead text-center"> Evolution of events on facebook </p>
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+<div class="panel panel-default">
+  <div class="panel-body">
+		<div class="panel panel-primary">
+			<div class="panel-heading" style="background:#3b5998"><strong>Facebook Page: <span style="color:black">{{ page_name }}</span></strong></div>
+				<div class="panel-body">
+					<div class="row">
+					<div class="col-sm-3"><img src="{{ picture }}" /></div>
+						<div class="col-sm-9">
+						<p><strong>{{ page_name }} </strong><i>posts:</i></p>
+							{{ description }}
+						</div>
+					</div>
+				</div>
+		</div>
+		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		  <div class="panel panel-primary">
+			<div class="panel-heading" role="tab" id="headingOne" style="background:#3b5998">
+			  <h4 class="panel-title">
+				<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+				  <strong>Comments:</strong>
+				</a>
+			  </h4>
+			</div>
+			<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+				<div class="panel-body">								
+					{% for val in data %}
+					<div class="panel panel-default">
+					  <div class="panel-heading" style="background:#8b9dc3">Comment ID: {{ val[2] }}    at: {{ val[3] }}</div>
+					  <div class="panel-body">
+						<p><strong>{{ val[4] }}</strong> <i>commented:</i></p>
+						{{ val[1] }}
+					  </div>
+					</div>
+					<p>&nbsp; </p>
+					{% endfor %}
+					
+					<nav aria-label="...">
+					  <ul class="pager">
+						<li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>
+						<li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+					  </ul>
+					</nav>
+					
+				</div>
+			 </div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<div class="container">
+<div class="panel panel-primary">
+  <div class="panel-heading" style="background:#3b5998"><strong>Facebook Page: <span style="color:black"></span></strong></div>
+  <div class="panel-body">
+	<div class="panel panel-primary" style="width:530px">
+	   <div class="panel-body">			
+				<p>&nbsp;</p>
+				<div class="panel panel-primary">
+						<div class="panel-body">
+						  {% for post, comments in post.items() %}
+							<p>&nbsp;</p>
+							<p>&nbsp;</p>
+							<div class="fb-post" data-href="https://www.facebook.com/TEDxHannover/posts/{{ post }}" data-width="500"></div>
+							<p>&nbsp;</p>	
+							{% for comment in comments %}
+							<div class="clearfix d-block">
+								<div class="col-sm-1">
+									<img src="https://scontent-frt3-1.xx.fbcdn.net/v/t1.0-1/p32x32/13221562_564570930368536_8038659626671085425_n.png?oh=44d73c851c9afc92cea079f424706689&amp;oe=5876D23A" alt="">
+								</div>
+								<div class="col-sm-11">
+									<a href="https://www.facebook.com/{{ comment[2] }}/" target="_blank"><strong>{{ comment[4] }}</strong></a>
+									<span>
+										{{ comment[1] }}
+									</span>
+								</div>
+							</div>
+							{% endfor %}
+						  {% endfor %}
+						</div>
+				</div>
+		</div>
+		</div>
+  </div>
+</div>
+</div>
+
+<div class="container">
+<div class="panel panel-primary">
+  <div class="panel-heading" style="background:#3b5998"><strong>Test Block: <span style="color:black"></span></strong></div>
+  <div class="panel-body">
+  <p class="lead">Post IDs</p>
+	{% for post, comments in post.items() %}
+		<iframe src="https://www.facebook.com/plugins/post.php?href=https://www.facebook.com/TEDxHannover/posts/{{ post }}&width=500" width="500" height="615" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+		{% for comment in comments %}
+		<iframe src="https://www.facebook.com/plugins/comment_embed.php?href=https://www.facebook.com/TEDxHannover/posts/{{ post }}?comment_id={{ comment }}&include_parent=false" width="500" height="161" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+		{% endfor %}
+		<br>
+	{% endfor %}
+  
+  </div>
+</div>
+</div>
+
+<div class="container">
+<div class="panel panel-primary">
+  <div class="panel-heading" style="background:#3b5998"><strong>Test Block: <span style="color:black"></span></strong></div>
+  <div class="panel-body">
+  <p class="lead">Post</p>
+	{% for post, comment in post.items() %}
+		<strong>{{ post }}</strong> {{ comment }} <br>
+	{% endfor %}
+  
+  </div>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block head %}
+<script>
+$(document).ready(function() {
+    $(".collpase").collapse();
+});
+</script>
+
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=1809279415952188";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+{% endblock %}
