@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request, jsonify
 import facebook, requests
-import simplejson as json
+import json
 from collections import defaultdict
 
 app = Flask(__name__)
@@ -19,7 +19,7 @@ page_id = 'brexituk'
 #page_id = 'tedxhannover'
 #page_id = 'FacebookDeutschland'
 pids_full = ['1102184159816462_1261709070530636']
-content_type = 'comments'
+content_type = 'comments.limit(3)'
 fb_url = ('https://graph.facebook.com/%s' %(pids_full[0]))
 
 @app.route("/facebook")
@@ -40,16 +40,16 @@ def facebook():
 	
 @app.route("/comments")
 def fb_comment():
-	#fb_data = fb_crawler(fb_url)
-	#post_comm_ids = defaultdict(list)
-	test_list = ['123', ['456', '789'],]
-	#for item in fb_data.items():
-	#	if type(item[1]) == dict:
-	#		for sub in item[1]['data']:
-	#			for sub in sub.items():
-	#				if sub[0] == 'id':
-	#					post_comm_ids[sub[1].split('_')[0]].append(sub[1].split('_')[1])
-	return jsonify(res = test_list)
+	fb_data = fb_crawler(fb_url)
+	post_comm_ids = defaultdict(list)
+	#test_list = ['123', ['456', '789'],]
+	for item in fb_data.items():
+		if type(item[1]) == dict:
+			for sub in item[1]['data']:
+				for sub in sub.items():
+					if sub[0] == 'id':
+						post_comm_ids[sub[1].split('_')[0]].append(sub[1].split('_')[1])
+	return jsonify(res = post_comm_ids)
 
 @app.route('/ajax')
 def index():

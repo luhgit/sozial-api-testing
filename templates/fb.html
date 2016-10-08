@@ -15,13 +15,13 @@
 		<div class="panel-body">
 
 			{% for post_id, comments in tlist.items() %}
-						<div class="fb-post" data-href="https://www.facebook.com/{{ page_name_or_id }}/posts/{{ post_id }}" data-width="750"></div>
+						<!-- <div class="fb-post" data-href="https://www.facebook.com/{{ page_name_or_id }}/posts/{{ post_id }}" data-width="750"></div> -->
 						
 						<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-								<div class="panel panel-default" style="width:750px; margin:0 auto;">
+								<div class="panel panel-default" style="width:780px; margin:0 auto;">
 									<div class="panel-heading" role="tab" id="headingOne" style="background:white">
 									  <h4 class="panel-title">
-										<a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ post_id }}" aria-expanded="true" aria-controls="collapseOne">
+										<a role="button" id="comments" data-toggle="collapse" data-parent="#accordion" href="#{{ post_id }}" aria-expanded="true" aria-controls="collapseOne">
 										  <strong>Comments</strong>
 										  <span class="glyphicon glyphicon-triangle-right pull-right" aria-hidden="true"></span>
 										</a>
@@ -29,15 +29,8 @@
 									</div>
 									<div id="{{ post_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 											<div class="panel-body">
-												<div id='comments' style='height:280px; overflow:hidden; overflow-y:scroll;'>
-														<div id="appendHere">
-															{% for comment in comments %}
-																<div class="fb-comment-embed" data-href="https://www.facebook.com/{{ page_name_or_id }}/posts/{{ post_id }}?comment_id={{ comment }}" data-width="715"></div>
-															{% endfor %}
-														</div>
-														<p id="loading">
-															<button class="btn btn-md btn-link"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...</button>
-														</p>
+												<div id='appendComments' class="text-center" style='width:750px; height:40em; overflow:auto; text-align:center;'>
+													
 												</div>
 											</div>
 									</div>
@@ -51,6 +44,8 @@
 {% endblock %}
 
 {% block head %}
+<script type=text/javascript src="../static/endlessScroll.js"></script>
+
 <script>
 $(document).ready(function() {
     $(".collpase").collapse();
@@ -66,46 +61,85 @@ $(document).ready(function() {
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 </script>
-<!--
-<script>
+<!-- <script>
+// $(document).ready(function() {
+// 	$.ajaxSetup({ cache: true });
+// 	$.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+// 		FB.init({
+// 			appId: '1809279415952188',
+// 			version: 'v2.7'
+// 		});
+// 		FB.api('/1261709070530636?fields=comments.limit(5)', function(response) {
+// 			console.log(response);
+// 		});
 
-$(function() {
-$('a').click(function() {
-	$('#loading').show();
-	appendComment();
-	$('#loading').hide();
-	});
-});
-var appendComment = function () {
-	$('#appendHere').append('Comments will be appended here ');
-	$('#appendHere').append('{% for comment in comments %}');
-	$('#appendHere').append('<div class="fb-comment-embed" data-href="https://www.facebook.com/{{ page_name_or_id }}/posts/{{ post_id }}?comment_id={{ comment }}" data-width="715"></div>');
-	$('#appendHere').append('{% endfor %}');
-}
+// 	});
+// });
+// </script> -->
+<script>
+var comments;
+function getComments() {
+        $.getJSON('/comments', function(data) {
+          comments = data.res;
+        });
+        return comments;
+	};
+
+function parse(obj) {
+        var comments = $.map(obj, function(el) {return el});
+        return comments;
+	};
 </script>
 <script>
-
-	$(function() {
-    $('button').click(function() {
-        var user = $('#txtUsername').val();
-        var pass = $('#txtPassword').val();
-        $.ajax({
-            url: '/signUpUser',
-            data: $('form').serialize(),
-            type: 'POST',
-            success: function(response) {
-                console.log(response);
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
-    });
+$(document).ready(function() {
+$(function() {
+$('a#comments').bind('click', function() {
+	//$('#appendComments').append('<p>Comments will be appended here</p>');
+	//$('#loading').show();
+	comments = getComments();
+	var comments = $.map(comments, function(el) {return el});
+	//var comments = Object.keys(comments).map(function(k) {return comments[k]});
+	if (Array.isArray(comments)) {
+		//console.log(comments);
+	}
+	
+	for (var i = 0; i < comments.length; i++) {
+				//console.log(comments[i]);
+				//$('#appendComments').append('<div class="fb-comment-embed" data-href="https://www.facebook.com/1102184159816462/posts/1261709070530636?comment_id='+comments[i]+'" data-width="715"></div>');
+				$('#appendComments').append('<iframe src="https://www.facebook.com/v2.7/plugins/comment_embed.php?href=https://www.facebook.com/1102184159816462/posts/1261709070530636?comment_id='+comments[i]+'" class="" style="border: none; visibility: visible; width: 715px; height: 135px;"></iframe>');
+	}
+	
+	//$('#loading').hide();
+	});
+	});
 });
+</script>
+<script type=text/javascript>
+	$(document).ready(function() {
+		
+		var offset = $('#appendComments').length;
 
-</script> -->
-
-
+		$('#appendComments').endlessScroll({
+			fireOnce: false,
+			fireDelay: false,
+			loader: '',
+			insertAfter: '#appendComments:last',
+			content: function() {
+				var comments = parse(getComments());
+				console.log(comments);
+				for (i in comments) {
+					//return ('<div>' + comments[i] + '</div>');
+					//jQuery.each(comments, function(index, item){
+						console.log(comments[i]);
+					//	console.log('<iframe src="https://www.facebook.com/v2.7/plugins/comment_embed.php?href=https://www.facebook.com/1102184159816462/posts/1261709070530636?comment_id='+item+'" class="" style="border: none; visibility: visible; width: 715px; height: 135px;"></iframe>');
+						return ('<iframe src="https://www.facebook.com/v2.7/plugins/comment_embed.php?href=https://www.facebook.com/1102184159816462/posts/1261709070530636?comment_id='+comments[i]+'" class="" style="border: none; visibility: visible; width: 715px; height: 135px;"></iframe>');
+				//	});
+					
+				}
+			}
+		});
+	});
+</script>
 
 <style>
 	.glyphicon-refresh-animate {
