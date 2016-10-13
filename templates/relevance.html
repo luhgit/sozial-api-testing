@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container" id="scroll-hashtags" style="margin:2em auto; padding:0; overflow:auto;">
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+
+<p> &nbsp; </p>
+<p> &nbsp; </p>
+<div class="panel panel-primary">
+	<div class="panel-heading lead text-center"><strong>Relevance Judgement</strong></div>
+		<div class="panel-body">
+			<div class="panel panel-default">
+				<div class="panel-heading text-center"><strong>Event: US Election 2016</strong></div>
+	  			<div class="panel-body">
+					 <div>
+					 	<p class="text-justify">
+					 		<p>
+					 			Voters will select presidential electors, who in turn will vote for a new president and vice president through the Electoral College. The term limit established in the Twenty-second Amendment to the United States Constitution prevents the incumbent president, Barack Obama of the Democratic Party, from being elected to a third term. The 2016 election will determine the 45th President and 48th Vice President of the United States.
+					 		</p>
+					 		<p>
+								The series of presidential primary elections and caucuses took place between February and June 2016, staggered among the 50 states, the District of Columbia and U.S. territories. This nominating process was also an indirect election, where voters cast ballots for a slate of delegates to a political party's nominating convention, who in turn elect their party's presidential nominee.
+							</p>
+							<p>
+								Businessman and reality television personality Donald Trump became the Republican Party's presidential nominee on July 19, 2016, after defeating U.S. Senator from Texas Ted Cruz, Governor of Ohio John Kasich, U.S. Senator from Florida Marco Rubio and other candidates in the Republican primary elections. If elected, Trump would become the oldest president to take office. Former Secretary of State and U.S. Senator from New York Hillary Clinton became the Democratic Party's presidential nominee on July 26, 2016, after defeating U.S. Senator from Vermont Bernie Sanders. Clinton is the first female presidential candidate nominated by a major political party.
+							</p>
+							<p>
+								Numerous third party and independent presidential candidates are also running in the election. One third party candidate, Libertarian Party nominee and former Governor of New Mexico Gary Johnson, has ballot access in all 50 states. Green Party nominee and former physician Jill Stein is on the ballot in enough states to mathematically win the electoral college. Both have appeared in major national polls. Johnson and Stein also ran as their parties' presidential nominees in the 2012 election.
+							</p>
+					 	</p>
+					 </div>		
+				</div>
+			</div>
+
+			<form class="form-horizontal" role="form" action="#">
+					<div class="col-sm-offset-3 col-sm-6">
+					<div id="hashtags">
+				  		<div class="panel panel-primary">
+		  					<div class="panel-body">
+						  		<div class="lead text-center"><stron>#debate</strong></div>
+						  		<div class="text-center">
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Relevant
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Possibly-Relevant
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Non-Relevant
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4"> Not-Known
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5"> Non-Keyword Hashtag
+									</label>
+								</div>		
+							</div>
+					 	</div>
+
+					 	<div class="panel panel-primary">
+		  					<div class="panel-body">
+						  		<div class="lead text-center"><stron>#debate</strong></div>
+						  		<div class="text-center">
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Relevant
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Possibly-Relevant
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Non-Relevant
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4"> Not-Known
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5"> Non-Keyword Hashtag
+									</label>
+								</div>		
+							</div>
+					 	</div>
+					</div>
+					<div class="text-center">
+						<button type="submit" class="btn btn-primary" value="submit">Submit</button>
+					</div>
+			</form>
+		
+			  
+		</div>
+	</div>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block head %}
+<script type=text/javascript src="../static/endlessScroll.js"></script>
+<script type=text/javascript>
+var hashtags;
+function getHashtags() {
+        $.getJSON('/rel_data', function(data) {
+          hashtags = data.res;
+          console.log(hashtags);
+        });
+        //return $.map(hashtags, function(el) {return el});     // To Parse an object into Array
+        return hashtags;
+	};
+</script>
+
+<script type=text/javascript>
+
+	var appendTag = function(tag){
+
+			$('#hashtags').append(`<div class="panel panel-primary">
+					<div class="panel-body">
+			  		<div class="lead text-center"><stron>`+ tag +`</strong></div>
+			  		<div class="text-center">
+						<label class="radio-inline">
+						  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Relevant
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Possibly-Relevant
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Non-Relevant
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4"> Not-Known
+						</label>
+						<label class="radio-inline">
+						  <input type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5"> Non-Keyword Hashtag
+						</label>
+					</div>		
+				</div>
+		 	</div>`);
+	};
+
+	$(document).ready(function() {
+		
+		var win = $(window);
+
+		win.endlessScroll({
+			fireOnce: true,
+			fireDelay: 0,  //false
+			loader: 'Loading...',
+			insertAfter: '#hashtags:last',
+			ceaseFireOnEmpty: false,
+			callback: function(i,p,d) {
+				var hashtags = getHashtags();
+				console.log(hashtags);
+				console.log(i, p , d);
+				if(hashtags != null){
+					for (i = 0; i < hashtags.length; i++) {
+						if (d == 'next') {
+							 console.log(hashtags[i]);
+							 appendTag(hashtags[i])
+						}
+						else {
+							return false;
+						}
+					}
+				}
+			}
+		});
+	}); 
+</script>
+{% endblock %}

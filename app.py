@@ -19,7 +19,7 @@ page_id = 'brexituk'
 #page_id = 'tedxhannover'
 #page_id = 'FacebookDeutschland'
 pids_full = ['1102184159816462_1261709070530636']
-content_type = 'comments.limit(3)'
+content_type = 'comments'
 fb_url = ('https://graph.facebook.com/%s' %(pids_full[0]))
 
 @app.route("/facebook")
@@ -38,6 +38,11 @@ def facebook():
 
 	return render_template('fb.html', page_name_or_id = pids_full[0].split('_')[0], postId = [pids_full[0].split('_')[1]], test = fb_data, tlist = test_list)
 	
+@app.route("/posts")
+def fb_posts():
+	posts = ['1261709070530636', '1270577636310446', '1267802689921274', '10154273475361281']
+	return jsonify(res = posts)
+
 @app.route("/comments")
 def fb_comment():
 	fb_data = fb_crawler(fb_url)
@@ -93,10 +98,35 @@ def signUpUser():
     password = request.form['password'];
     return json.dumps({'status':'OK','user':user,'pass':password});
 
+@app.route('/relevance')
+def relevance():
+    return render_template('relevance.html')
+
+@app.route('/rel_data')
+def rel_data():
+	hashtags = ['#donald', '#clinton', '#uselection', '#election2016', '#uselection2016', '#gop', '#democrats', '#rebublicans', '#preseidentialdebate', '#debate', '#whitehouse']
+	return jsonify(res = hashtags)
 		
 @app.route("/")
 def home():
 	return render_template('index.html')
+
+@app.route("/test")
+def test():
+	return render_template('test.html')
+
+@app.route("/ids")
+def IDs():
+	ids = ['1102184159816462_1261709070530636']
+	#ids = ['1102184159816462_1261709070530636', '1102184159816462_1270577636310446', '1102184159816462_1267802689921274', '1102184159816462_10154273475361281']
+	return jsonify(res = ids)
+
+@app.route("/token")
+def token():
+	token = "EAACEdEose0cBAGN0gtZCLrehJPlaJye4m8LrMQQF2LLc4KAf246vX4KhmECVqJgRUq8zKv42YdZCOihhGIzUIYGB85oq1dj8ZCndxNVnc4Nn46xoY91A4JYA7a7p7gQvbRI6DATS52N8zXvtMZA7VbN7qp4NtXHa0WqVPlzTmAZDZD";
+	return jsonify(res = token)
+
+
 if __name__ == "__main__":
 	app.run(debug = True)
 	fb_crawler(fb_url)
