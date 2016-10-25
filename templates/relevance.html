@@ -33,61 +33,18 @@
 				</div>
 			</div>
 
-			<form class="form-horizontal" role="form" action="#">
+			<form class="form-horizontal" id="relForm"role="form" action="judgement" method="POST" enctype="text/plain">
 					<div class="col-sm-offset-3 col-sm-6">
 					<div id="hashtags">
-				  		<div class="panel panel-primary">
-		  					<div class="panel-body">
-						  		<div class="lead text-center"><stron>#debate</strong></div>
-						  		<div class="text-center">
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Relevant
-									</label>
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Possibly-Relevant
-									</label>
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Non-Relevant
-									</label>
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4"> Not-Known
-									</label>
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5"> Non-Keyword Hashtag
-									</label>
-								</div>		
-							</div>
-					 	</div>
-
-					 	<div class="panel panel-primary">
-		  					<div class="panel-body">
-						  		<div class="lead text-center"><stron>#debate</strong></div>
-						  		<div class="text-center">
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Relevant
-									</label>
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Possibly-Relevant
-									</label>
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Non-Relevant
-									</label>
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4"> Not-Known
-									</label>
-									<label class="radio-inline">
-									  <input type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5"> Non-Keyword Hashtag
-									</label>
-								</div>		
-							</div>
-					 	</div>
-					</div>
+				  	</div>
+				  	<div class="text-center">
+				  	<button class="btn btn-default" type="button" id="loadMore" onclick="loadHashtags()">Load Hashtags</button>
+				  	</div>
+				  	<p>&nbsp;</p>
 					<div class="text-center">
-						<button type="submit" class="btn btn-primary" value="submit">Submit</button>
+						<button type="submit" class="btn btn-danger" value="submit">Submit</button>
 					</div>
 			</form>
-		
-			  
 		</div>
 	</div>
 </div>
@@ -98,10 +55,11 @@
 
 {% block head %}
 <script type=text/javascript src="../static/endlessScroll.js"></script>
+
 <script type=text/javascript>
 var hashtags;
 function getHashtags() {
-        $.getJSON('/rel_data', function(data) {
+        $.getJSON('/hashtags', function(data) {
           hashtags = data.res;
           console.log(hashtags);
         });
@@ -118,53 +76,65 @@ function getHashtags() {
 					<div class="panel-body">
 			  		<div class="lead text-center"><stron>`+ tag +`</strong></div>
 			  		<div class="text-center">
-						<label class="radio-inline">
-						  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Relevant
+						<label class="checkbox-inline">
+						  <input type="checkbox" name="`+ tag +`" id="`+ tag +`" value="2"> Relevant
 						</label>
-						<label class="radio-inline">
-						  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Possibly-Relevant
+						<label class="checkbox-inline">
+						  <input type="checkbox" name="`+ tag +`" id="`+ tag +`" value="1"> Possibly-Relevant
 						</label>
-						<label class="radio-inline">
-						  <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Non-Relevant
+						<label class="checkbox-inline">
+						  <input type="checkbox" name="`+ tag +`" id="`+ tag +`" value="-2"> Non-Relevant
 						</label>
-						<label class="radio-inline">
-						  <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4"> Not-Known
+						<label class="checkbox-inline">
+						  <input type="checkbox" name="`+ tag +`" id="`+ tag +`" value="0"> Not-Known
 						</label>
-						<label class="radio-inline">
-						  <input type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5"> Non-Keyword Hashtag
+						<label class="checkbox-inline">
+						  <input type="checkbox" name="`+ tag +`" id="`+ tag +`" value="-1"> Non-Keyword Hashtag
 						</label>
 					</div>		
 				</div>
 		 	</div>`);
 	};
-
-	$(document).ready(function() {
-		
-		var win = $(window);
-
-		win.endlessScroll({
-			fireOnce: true,
-			fireDelay: 0,  //false
-			loader: 'Loading...',
-			insertAfter: '#hashtags:last',
-			ceaseFireOnEmpty: false,
-			callback: function(i,p,d) {
-				var hashtags = getHashtags();
-				console.log(hashtags);
-				console.log(i, p , d);
-				if(hashtags != null){
-					for (i = 0; i < hashtags.length; i++) {
-						if (d == 'next') {
-							 console.log(hashtags[i]);
-							 appendTag(hashtags[i])
-						}
-						else {
-							return false;
-						}
-					}
-				}
-			}
-		});
-	}); 
 </script>
+
+<script>
+	var loadHashtags = function(){
+		hashtags = getHashtags();
+		for(var i=0; i<hashtags.length; i++){
+			appendTag(hashtags[i]);
+		}
+		$('#loadMore').hide();
+
+	};
+
+</script>
+
+//	$(document).ready(function() {
+//		
+//		var win = $(window);
+//
+//		win.endlessScroll({
+//			fireOnce: true,
+//			fireDelay: 1000,  //false
+//			loader: 'Loading...',
+//			insertAfter: '#hashtags:last',
+//			ceaseFireOnEmpty: false,
+//			callback: function(i,p,d) {
+//				var hashtags = getHashtags();
+//				console.log(hashtags);
+//				console.log(i, p , d);
+//				if(hashtags != null){
+//					for (i = 0; i < hashtags.length; i++) {
+//						if (d == 'next') {
+//							 console.log(hashtags[i]);
+//							 appendTag(hashtags[i])
+//						}
+//						else {
+//							return false;
+//						}
+//					}
+//				}
+//			}
+//		});
+//	}); 
 {% endblock %}

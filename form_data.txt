@@ -1,0 +1,11 @@
+#donald=2
+#clinton=1
+#uselection=2
+#election2016=2
+#uselection2016=-2
+#gop=1
+#democrats=1
+#rebublicans=2
+#preseidentialdebate=1
+#debate=2
+#whitehouse=-2

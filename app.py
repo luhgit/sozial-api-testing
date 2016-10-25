@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, jsonify
 import facebook, requests
 import json
 from collections import defaultdict
+import vincent
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -102,11 +103,21 @@ def signUpUser():
 def relevance():
     return render_template('relevance.html')
 
-@app.route('/rel_data')
+@app.route('/hashtags')
 def rel_data():
 	hashtags = ['#donald', '#clinton', '#uselection', '#election2016', '#uselection2016', '#gop', '#democrats', '#rebublicans', '#preseidentialdebate', '#debate', '#whitehouse']
 	return jsonify(res = hashtags)
-		
+
+@app.route('/judgement', methods=['POST'])
+def judgement():
+	if request.method == 'POST':
+		judgements =  request.data
+		print(judgements.decode())
+		f = open('form_data.txt','w')
+		f.write(judgements.decode())
+		f.close()
+	return render_template('relevance.html')
+
 @app.route("/")
 def home():
 	return render_template('index.html')
